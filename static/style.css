@@ -1,0 +1,488 @@
+/* Стили сайта. Без фреймворков — только CSS-переменные для палитры
+   (легко перекрасить в одном месте) и обычный flexbox/grid для раскладки.
+   Тёмная тема подключается автоматически через prefers-color-scheme,
+   без JS-переключателя. */
+
+:root {
+  --color-bg: #f4f5fa;
+  --color-surface: #ffffff;
+  --color-border: #e2e4ec;
+  --color-text: #1c1f2b;
+  --color-text-muted: #62667a;
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-success-bg: #dcfce7;
+  --color-success-text: #166534;
+  --color-danger-bg: #fee2e2;
+  --color-danger-text: #991b1b;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(20, 20, 40, 0.05), 0 4px 16px rgba(20, 20, 40, 0.06);
+  --shadow-hover: 0 2px 4px rgba(20, 20, 40, 0.08), 0 8px 24px rgba(20, 20, 40, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #14151f;
+    --color-surface: #1c1e2b;
+    --color-border: #2e3142;
+    --color-text: #e8e9f3;
+    --color-text-muted: #9497ab;
+    --color-primary: #818cf8;
+    --color-primary-hover: #a5b4fc;
+    --color-success-bg: #123321;
+    --color-success-text: #86efac;
+    --color-danger-bg: #3a1414;
+    --color-danger-text: #fca5a5;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+/* Навигация */
+
+.site-nav {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.site-nav-inner {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+}
+
+.site-nav-links {
+  display: flex;
+  gap: 18px;
+  flex: 1;
+}
+
+.site-nav a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+
+.site-nav a.active {
+  color: var(--color-text);
+  border-bottom-color: var(--color-primary);
+}
+
+.site-nav a:hover {
+  color: var(--color-text);
+}
+
+.progress-pill {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+
+/* Типографика */
+
+h1 {
+  font-size: 1.6rem;
+  margin: 0 0 8px;
+}
+
+h1 .block-progress-badge {
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+/* Прогресс-бар на индекс-страницах */
+
+.progress-bar {
+  position: relative;
+  background: var(--color-border);
+  border-radius: 999px;
+  height: 10px;
+  margin: 20px 0 28px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-hover));
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.progress-label {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* Карточки блоков на /theory и /practice */
+
+.block-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+}
+
+.block-card {
+  display: block;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.block-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.block-card h2 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  color: var(--color-primary);
+}
+
+.block-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+.card-exercise-list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+}
+
+.block-progress-badge {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+.block-progress-badge.badge-done {
+  color: var(--color-success-text);
+  background: var(--color-success-bg);
+  border-color: transparent;
+}
+
+.breadcrumb {
+  margin-bottom: 12px;
+}
+
+.breadcrumb a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.block-footer {
+  margin-top: 28px;
+}
+
+.block-footer a {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.block-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Темы внутри блока теории */
+
+.topic {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.topic h3 {
+  margin-top: 0;
+  font-family: "Courier New", monospace;
+}
+
+.explanation {
+  white-space: pre-line;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.examples-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+}
+
+.examples-table th {
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  padding: 4px 8px 6px 0;
+}
+
+.examples-table td {
+  vertical-align: top;
+  padding: 10px 8px 10px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin: 2px 4px 2px 0;
+  font-size: 0.85rem;
+}
+
+.chip-yes {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.chip-no {
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+}
+
+.chip-neutral {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+/* Строка-источник в упражнениях на re.finditer */
+
+.source-string {
+  display: block;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  word-break: break-all;
+}
+
+/* Тестер под темой теории */
+
+.tester {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--color-border);
+}
+
+.tester-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tester-form label {
+  width: 100%;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+.tester-results {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+}
+
+.tester-results li {
+  display: inline-block;
+}
+
+/* Упражнения на /practice */
+
+.exercise {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.exercise h2 {
+  font-size: 1.15rem;
+  margin: 0 0 8px;
+}
+
+.exercise-solved-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-success-text);
+  background: var(--color-success-bg);
+  border-radius: 999px;
+  padding: 2px 10px;
+  vertical-align: middle;
+}
+
+.test-strings {
+  list-style: none;
+  padding: 0;
+}
+
+.test-strings li {
+  padding: 4px 0;
+}
+
+.test-strings code {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.expected {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.pattern-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 9px 12px;
+  font-family: "Courier New", monospace;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.code-input {
+  flex-basis: 100%;
+  min-height: 160px;
+  padding: 12px;
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  resize: vertical;
+}
+
+.code-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.pattern-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+button {
+  padding: 9px 18px;
+  border: none;
+  border-radius: 6px;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+button:hover {
+  background: var(--color-primary-hover);
+}
+
+.error {
+  color: var(--color-danger-text);
+  margin-bottom: 12px;
+  white-space: pre-wrap;
+}
+
+.results {
+  list-style: none;
+  padding: 0;
+}
+
+.results li {
+  padding: 7px 12px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  font-family: "Courier New", monospace;
+  font-size: 0.92rem;
+}
+
+.result-correct {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.result-wrong {
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+}

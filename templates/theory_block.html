@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}{{ content_block.title }}{% endblock %}
+
+{% block content %}
+<p class="breadcrumb"><a href="{{ url_for('theory_index') }}">&larr; Все блоки теории</a></p>
+
+<h1>{{ content_block.title }}</h1>
+<p>{{ content_block.intro }}</p>
+
+{% for topic in content_block.topics %}
+<article class="topic">
+  <h3>{{ topic.title }}</h3>
+  <p class="explanation">{{ topic.explanation }}</p>
+
+  {% if topic.examples %}
+  <table class="examples-table">
+    <thead>
+      <tr>
+        <th>Шаблон</th>
+        <th>Подходит</th>
+        <th>Не подходит</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ex in topic.examples %}
+      <tr>
+        <td><code>{{ ex.pattern }}</code></td>
+        <td>
+          {% for m in ex.match %}
+          <code class="chip chip-yes">{{ m if m != "" else "(пусто)" }}</code>
+          {% endfor %}
+        </td>
+        <td>
+          {% for m in ex.no_match %}
+          <code class="chip chip-no">{{ m if m != "" else "(пусто)" }}</code>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="tester">
+    <form class="tester-form">
+      <label for="tester-input-{{ loop.index0 }}">Проверить своё регулярное выражение на этих строках:</label>
+      <input
+        type="text"
+        id="tester-input-{{ loop.index0 }}"
+        class="pattern-input"
+        placeholder="например, \d+"
+        autocomplete="off"
+      >
+      <button type="submit">Проверить</button>
+    </form>
+    <div class="error"></div>
+    <ul class="tester-results"></ul>
+    <script type="application/json" class="tester-strings">{{ topic.tester_strings | tojson }}</script>
+  </div>
+  {% endif %}
+</article>
+{% endfor %}
+
+<p class="block-footer">
+  <a href="{{ url_for('practice_block', block_id=content_block.id) }}">Перейти к практике по этой теме &rarr;</a>
+</p>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='theory-tester.js') }}"></script>
+{% endblock %}

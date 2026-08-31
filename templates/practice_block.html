@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}{{ content_block.title }}{% endblock %}
+
+{% block content %}
+<p class="breadcrumb"><a href="{{ url_for('practice_index') }}">&larr; Все блоки практики</a></p>
+
+<h1>
+  {{ content_block.title }}
+  <span class="block-progress-badge" data-block-id="{{ content_block.id }}"></span>
+</h1>
+
+{% for exercise in content_block.exercises %}
+<section class="exercise" data-block-id="{{ content_block.id }}" data-exercise-id="{{ exercise.id }}">
+  <h2>{{ exercise.title }} <span class="exercise-solved-badge"></span></h2>
+  <p>{{ exercise.description }}</p>
+
+  {% if exercise.kind == "code" %}
+  <h3>Строка (файл)</h3>
+  <p><code class="source-string">{{ exercise.source }}</code></p>
+
+  <form class="check-form">
+    <label for="code-input-{{ loop.index0 }}">Ваша программа целиком:</label>
+    <textarea
+      id="code-input-{{ loop.index0 }}"
+      class="code-input"
+      rows="8"
+      spellcheck="false"
+      placeholder="import re&#10;s = &quot;...&quot;&#10;...&#10;print(...)"
+    ></textarea>
+    <button type="submit">Проверить</button>
+  </form>
+  {% elif exercise.source is defined %}
+  <h3>Строка для поиска</h3>
+  <p><code class="source-string">{{ exercise.source }}</code></p>
+
+  <form class="check-form">
+    <label for="pattern-input-{{ loop.index0 }}">Ваше регулярное выражение:</label>
+    <input
+      type="text"
+      id="pattern-input-{{ loop.index0 }}"
+      class="pattern-input"
+      placeholder="например, \d+"
+      autocomplete="off"
+    >
+    <button type="submit">Проверить</button>
+  </form>
+  {% else %}
+  <h3>Тестовые строки</h3>
+  <ul class="test-strings">
+    {% for t in exercise.test_strings %}
+    <li>
+      <code>{{ t.value if t.value != "" else "(пустая строка)" }}</code>
+      <span class="expected">— ожидается: {{ "совпадает" if t.expected else "не совпадает" }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <form class="check-form">
+    <label for="pattern-input-{{ loop.index0 }}">Ваше регулярное выражение:</label>
+    <input
+      type="text"
+      id="pattern-input-{{ loop.index0 }}"
+      class="pattern-input"
+      placeholder="например, \d+"
+      autocomplete="off"
+    >
+    <button type="submit">Проверить</button>
+  </form>
+  {% endif %}
+
+  <div class="error"></div>
+  <ul class="results"></ul>
+
+  <script type="application/json" class="exercise-data">{{ exercise | tojson }}</script>
+</section>
+{% endfor %}
+
+<p class="block-footer">
+  <a href="{{ url_for('theory_block', block_id=content_block.id) }}">&larr; Повторить теорию по этой теме</a>
+</p>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}

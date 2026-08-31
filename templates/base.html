@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Регулярные выражения{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="site-nav-inner">
+      <span class="brand">regex-ege</span>
+      <div class="site-nav-links">
+        <a href="{{ url_for('theory_index') }}" class="{{ 'active' if active == 'theory' else '' }}">Теория</a>
+        <a href="{{ url_for('practice_index') }}" class="{{ 'active' if active == 'practice' else '' }}">Практика</a>
+      </div>
+      <span class="progress-pill" id="nav-progress-pill" title="Решено упражнений всего"></span>
+    </div>
+  </nav>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- {block_id: [exercise_id, ...]} по всем блокам — нужно JS, чтобы
+       считать прогресс (сколько всего упражнений и сколько решено). -->
+  <script type="application/json" id="exercise-map">{{ exercise_map | tojson }}</script>
+  <script src="{{ url_for('static', filename='progress.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

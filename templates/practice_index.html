@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Практика: регулярные выражения{% endblock %}
+
+{% block content %}
+<h1>Практика: регулярные выражения</h1>
+<p>Те же блоки, что и в теории — решите упражнения по теме, которую только что изучили.</p>
+
+<div class="progress-bar" id="overall-progress">
+  <div class="progress-fill" style="width: 0%"></div>
+  <span class="progress-label"></span>
+</div>
+
+<div class="block-list">
+  {% for block in blocks %}
+  <a class="block-card" href="{{ url_for('practice_block', block_id=block.id) }}">
+    <h2>{{ loop.index }}. {{ block.title }}</h2>
+    <ul class="card-exercise-list">
+      {% for exercise in block.exercises %}
+      <li>{{ exercise.title }}</li>
+      {% endfor %}
+    </ul>
+    <span class="block-progress-badge" data-block-id="{{ block.id }}"></span>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -43,20 +43,14 @@ def find_block(blocks, block_id):
     abort(404)
 
 
-def attach_tester_strings(topics):
-    # Для интерактивного тестера под каждой темой нужен список строк,
-    # на которых можно опробовать свой regex. Берём все "match" и
-    # "no_match" строки из примеров темы, без повторов, в порядке появления.
-    for topic in topics:
-        seen = []
-        seen_set = set()
-        for example in topic.get("examples", []):
-            for s in example["match"] + example["no_match"]:
-                if s not in seen_set:
-                    seen_set.add(s)
-                    seen.append(s)
-        topic["tester_strings"] = seen
-    return topics
+def neighbors(blocks, block_id):
+    # Соседние блоки по порядку в JSON — для ссылок "предыдущий/следующий"
+    # на страницах теории и практики.
+    ids = [b["id"] for b in blocks]
+    index = ids.index(block_id)
+    prev_block = blocks[index - 1] if index > 0 else None
+    next_block = blocks[index + 1] if index < len(blocks) - 1 else None
+    return prev_block, next_block
 
 
 @app.context_processor
@@ -81,9 +75,16 @@ def theory_index():
 
 @app.route("/theory/<block_id>")
 def theory_block(block_id):
-    content_block = find_block(load_theory(), block_id)
-    attach_tester_strings(content_block["topics"])
-    return render_template("theory_block.html", content_block=content_block, active="theory")
+    blocks = load_theory()
+    content_block = find_block(blocks, block_id)
+    prev_block, next_block = neighbors(blocks, block_id)
+    return render_template(
+        "theory_block.html",
+        content_block=content_block,
+        prev_block=prev_block,
+        next_block=next_block,
+        active="theory",
+    )
 
 
 @app.route("/practice")
@@ -93,8 +94,16 @@ def practice_index():
 
 @app.route("/practice/<block_id>")
 def practice_block(block_id):
-    content_block = find_block(load_exercises(), block_id)
-    return render_template("practice_block.html", content_block=content_block, active="practice")
+    blocks = load_exercises()
+    content_block = find_block(blocks, block_id)
+    prev_block, next_block = neighbors(blocks, block_id)
+    return render_template(
+        "practice_block.html",
+        content_block=content_block,
+        prev_block=prev_block,
+        next_block=next_block,
+        active="practice",
+    )
 
 
 @app.route("/check", methods=["POST"])
@@ -211,6 +220,11 @@ def check_code():
             regex_check["correct"] = computed == expected_answer
 
     return jsonify({"ok": True, "checks": checks, "regex_check": regex_check})
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return render_template("404.html", active=None), 404
 
 
 if __name__ == "__main__":

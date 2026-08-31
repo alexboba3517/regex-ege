@@ -40,23 +40,6 @@
       {% endfor %}
     </tbody>
   </table>
-
-  <div class="tester">
-    <form class="tester-form">
-      <label for="tester-input-{{ loop.index0 }}">Проверить своё регулярное выражение на этих строках:</label>
-      <input
-        type="text"
-        id="tester-input-{{ loop.index0 }}"
-        class="pattern-input"
-        placeholder="например, \d+"
-        autocomplete="off"
-      >
-      <button type="submit">Проверить</button>
-    </form>
-    <div class="error"></div>
-    <ul class="tester-results"></ul>
-    <script type="application/json" class="tester-strings">{{ topic.tester_strings | tojson }}</script>
-  </div>
   {% endif %}
 </article>
 {% endfor %}
@@ -64,8 +47,15 @@
 <p class="block-footer">
   <a href="{{ url_for('practice_block', block_id=content_block.id) }}">Перейти к практике по этой теме &rarr;</a>
 </p>
-{% endblock %}
 
-{% block scripts %}
-<script src="{{ url_for('static', filename='theory-tester.js') }}"></script>
+<nav class="block-pager">
+  {% if prev_block %}
+  <a href="{{ url_for('theory_block', block_id=prev_block.id) }}" class="pager-prev">&larr; {{ prev_block.title }}</a>
+  {% else %}
+  <span></span>
+  {% endif %}
+  {% if next_block %}
+  <a href="{{ url_for('theory_block', block_id=next_block.id) }}" class="pager-next">{{ next_block.title }} &rarr;</a>
+  {% endif %}
+</nav>
 {% endblock %}

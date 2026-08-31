@@ -4,7 +4,9 @@
 
 {% block content %}
 <h1>Теория: регулярные выражения</h1>
-<p>Материал разбит на блоки — от простого к сложному. После блока теории сразу переходите к практике по той же теме.</p>
+<p>Материал разбит на блоки — от простого к сложному. Идите по порядку: после блока теории сразу переходите к практике по той же теме.</p>
+
+<a class="cta-button" href="{{ url_for('theory_block', block_id=blocks[0].id) }}">Начать обучение &rarr;</a>
 
 <div class="progress-bar" id="overall-progress">
   <div class="progress-fill" style="width: 0%"></div>
@@ -14,6 +16,8 @@
 <div class="block-list">
   {% for block in blocks %}
   <a class="block-card" href="{{ url_for('theory_block', block_id=block.id) }}">
+    {% if loop.first %}<span class="path-badge path-start">Начните здесь</span>{% endif %}
+    {% if loop.last %}<span class="path-badge path-final">Цель курса</span>{% endif %}
     <h2>{{ loop.index }}. {{ block.title }}</h2>
     <p>{{ block.short_description }}</p>
     <span class="block-progress-badge" data-block-id="{{ block.id }}"></span>

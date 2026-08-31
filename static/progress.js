@@ -27,6 +27,15 @@ function isExerciseSolved(blockId, exerciseId) {
   return Boolean(loadProgress()[`${blockId}:${exerciseId}`]);
 }
 
+function resetProgress() {
+  localStorage.removeItem(PROGRESS_STORAGE_KEY);
+  updateProgressUI();
+  // Бейджи "✓ решено" рядом с конкретными упражнениями на текущей
+  // странице выставляются один раз при загрузке (см. script.js) —
+  // после сброса их проще перерисовать перезагрузкой страницы.
+  location.reload();
+}
+
 // Сколько упражнений решено в блоке / всего на сайте.
 // exerciseMap — {blockId: [exerciseId, ...]}, зашит на каждой странице
 // в <script id="exercise-map"> (см. templates/base.html).
@@ -84,4 +93,15 @@ function updateProgressUI() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", updateProgressUI);
+document.addEventListener("DOMContentLoaded", () => {
+  updateProgressUI();
+
+  const resetBtn = document.getElementById("reset-progress-btn");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      if (confirm("Сбросить весь прогресс? Это нельзя отменить.")) {
+        resetProgress();
+      }
+    });
+  }
+});

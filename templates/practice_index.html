@@ -6,6 +6,8 @@
 <h1>Практика: регулярные выражения</h1>
 <p>Те же блоки, что и в теории — решите упражнения по теме, которую только что изучили.</p>
 
+<a class="cta-button" href="{{ url_for('practice_block', block_id=blocks[0].id) }}">Начать практику &rarr;</a>
+
 <div class="progress-bar" id="overall-progress">
   <div class="progress-fill" style="width: 0%"></div>
   <span class="progress-label"></span>
@@ -14,6 +16,8 @@
 <div class="block-list">
   {% for block in blocks %}
   <a class="block-card" href="{{ url_for('practice_block', block_id=block.id) }}">
+    {% if loop.first %}<span class="path-badge path-start">Начните здесь</span>{% endif %}
+    {% if loop.last %}<span class="path-badge path-final">Цель курса</span>{% endif %}
     <h2>{{ loop.index }}. {{ block.title }}</h2>
     <ul class="card-exercise-list">
       {% for exercise in block.exercises %}
